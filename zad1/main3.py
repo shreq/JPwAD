@@ -1,6 +1,4 @@
 import pandas
-import scipy
-import seaborn
 from matplotlib import pyplot
 
 numerical = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
@@ -35,8 +33,13 @@ correlated_names = correlation.index.get_level_values(0)[0], correlation.index.g
 correlated_data = data[[correlated_names[0],
                         correlated_names[1]]].to_numpy()
 
-seaborn.distplot(correlated_data[:, 0], label=correlated_names[0], bins=15, kde=False)
-seaborn.distplot(correlated_data[:, 1], label=correlated_names[1], bins=15, kde=False)
+pyplot.hist(
+    correlated_data,
+    label=correlated_names,
+    bins=25,
+    alpha=0.4,
+    histtype='stepfilled'
+)
 pyplot.xlabel("value")
 pyplot.ylabel("frequency")
 pyplot.legend()
