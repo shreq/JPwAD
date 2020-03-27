@@ -42,9 +42,3 @@ pyplot.ylabel("frequency")
 pyplot.legend()
 pyplot.savefig("histogram4")
 pyplot.show()
-
-# data_n = (data.select_dtypes(numerical) - data.select_dtypes(numerical).mean()) / data.select_dtypes(numerical).std()
-# print(
-#     data_n.head().to_string() + '\n\n' +
-#     data_n.mean().to_string() + '\n\n' +
-#     data_n.std().to_string())
