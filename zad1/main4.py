@@ -1,17 +1,13 @@
-import math
-
 import pandas
 import scipy.stats
 from matplotlib import pyplot
 
-numerical = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
-nonnumerical = ['object']
 datasets = {
     "births": ("./datasets/4/Births.csv", 'births', 10000),
     "manaus": ("./datasets/4/manaus.csv", 'manaus', 0),
     "quakes": ("./datasets/4/quakes.csv", 'depth', 300)
 }
-choice = "quakes"
+choice = "manaus"
 
 data = pandas.read_csv(
     datasets[choice][0]
@@ -34,7 +30,8 @@ pyplot.hist(
     label=datasets[choice][1],
     bins=25,
     alpha=0.4,
-    histtype='bar'
+    histtype='bar',
+    density=True
 )
 pyplot.axvline(
     datasets[choice][2],

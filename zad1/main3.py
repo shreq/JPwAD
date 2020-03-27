@@ -38,7 +38,8 @@ pyplot.hist(
     label=correlated_names,
     bins=25,
     alpha=0.4,
-    histtype='stepfilled'
+    histtype='stepfilled',
+    density=True
 )
 pyplot.xlabel("value")
 pyplot.ylabel("frequency")
