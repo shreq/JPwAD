@@ -7,28 +7,44 @@ datasets = {
     "manaus": ("./datasets/4/manaus.csv", 'manaus', 0),
     "quakes": ("./datasets/4/quakes.csv", 'depth', 300)
 }
-choice = "manaus"
+choice = "quakes"
 
 data = pandas.read_csv(
     datasets[choice][0]
 ).iloc[:, 1:]
 data.index += 1
+sample = data[datasets[choice][1]]
 
-statistic, p_value = scipy.stats.ttest_1samp(
-    data[datasets[choice][1]],
-    datasets[choice][2]
-)
+normal, p_value_n = scipy.stats.normaltest(sample)
 
 print(
-    "T-Statistic:\t " + str(statistic) + '\n' +
-    "P-Value    :\t " + str(p_value) + '\n' +
-    "Hypothesis " + ("rejected" if p_value < 0.05 else "confirmed")
+    "-> Normality test\n" +
+    "T-Statistic:\t" + str(normal) + '\n' +
+    "P-Value:    \t" + str(p_value_n) + '\n'
 )
 
+if p_value_n < 0.05:
+    print("Sample doesn't come from normal distribution\n" +
+          "Quitting")
+else:
+    print("Sample comes from normal distribution")
+
+    hypothesis, p_value_t = scipy.stats.ttest_1samp(
+        sample,
+        datasets[choice][2]
+    )
+
+    print(
+        "\n-> Hypothesis test\n" +
+        "T-Statistic:\t " + str(hypothesis) + '\n' +
+        "P-Value    :\t " + str(p_value_t) + '\n' +
+        "Hypothesis " + ("rejected" if p_value_t < 0.05 else "confirmed")
+    )
+
 pyplot.hist(
-    data[datasets[choice][1]],
+    sample,
     label=datasets[choice][1],
-    bins=25,
+    bins=sample.nunique(),
     alpha=0.4,
     histtype='bar',
     density=True
