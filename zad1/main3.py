@@ -30,8 +30,8 @@ correlation = correlation[
     ].sort_values(ascending=False)
 
 correlated_names = correlation.index.get_level_values(0)[0], correlation.index.get_level_values(0)[1]
-correlated_data = data[[correlated_names[0],
-                        correlated_names[1]]].to_numpy()
+correlated_data = [data[correlated_names[0]],
+                   data[correlated_names[1]]]
 
 pyplot.hist(
     correlated_data,
