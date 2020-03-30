@@ -1,8 +1,0 @@
-korelacja:
-
-tak moimi słowami to
-to jest wyrażenie (na ile dwie cechy są ze sobą powiązane) na podstawie kolejnych próbek
-
-jakie są ich tendencje (np. na wykresie, histogramie)
-
-
