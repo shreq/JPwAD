@@ -1,5 +1,7 @@
 import numpy
 import pandas
+import seaborn
+from matplotlib import pyplot
 
 
 def na_fraction(df):
@@ -7,13 +9,8 @@ def na_fraction(df):
 
 
 def get_stats(df):
-    stats = pandas.DataFrame()
-    stats['Mean'] = df.mean()
-    stats['Std deviation'] = df.std()
-    stats['Q1 - 25%'] = df.quantile(0.25)
-    stats['Q2 - 50%'] = df.quantile(0.5)
-    stats['Q3 - 75%'] = df.quantile(0.75)
-    stats['NA%'] = df.isna().sum()
+    stats = data.describe().drop(['count', 'min', 'max']).T
+    stats['%mv'] = df.isna().sum()
     return stats
 
 
@@ -36,7 +33,7 @@ previous = get_stats(data)
 print(
     '- - - - - Before mean imputation - - - - -\n' +
     'Missing values:\t' + '{:.2%}'.format(na_fraction(data)) + '\n' +
-    get_stats(data).T.to_string()
+    get_stats(data).to_string()
 )
 
 impute_mean(data, inplace=True)
@@ -44,10 +41,17 @@ impute_mean(data, inplace=True)
 print(
     '- - - - - After mean imputation - - - - -\n' +
     'Missing values:\t' + '{:.2%}'.format(na_fraction(data)) + '\n' +
-    get_stats(data).T.to_string()
+    get_stats(data).to_string()
 )
 
 print(
     '- - - - - Diff - - - - -\n' +
-    (get_stats(data) - previous).T.to_string()
+    (get_stats(data) - previous).to_string()
 )
+
+# seaborn.regplot(
+#     x='lesion_1',
+#     y='lesion_3',
+#     data=data
+# )
+# pyplot.show()
