@@ -1,7 +1,16 @@
+from os import name, system
+
 import numpy
 import pandas
 import seaborn
 from matplotlib import pyplot
+
+
+def clear():
+    if name == 'nt':
+        _ = system('cls')
+    else:
+        _ = system('clear')
 
 
 def na_fraction(df):
@@ -18,6 +27,18 @@ def impute_mean(df, inplace=False):
     return df.fillna(df.mean(), inplace=inplace)
 
 
+def impute_interpolate(df, inplace=False):
+    return df.interpolate(inplace=inplace)
+
+
+def impute_hotdeck(df, inplace=False):
+    return df.fillna(method='ffill', inplace=inplace)
+
+
+def impute_regression(df, inplace=False):
+    return df.interpolate(method='linear', limit_direction='both', inplace=inplace)
+
+
 pandas.options.display.float_format = '{:.2f}'.format
 data = pandas.read_csv('./datasets/horse.csv')
 
@@ -29,24 +50,48 @@ data.drop(
     inplace=True
 )
 
-previous = get_stats(data)
+while True:
+    clear()
+    choice = int(input(
+        'Method of imputation:\n'
+        '[1] Mean\n'
+        '[2] Interpolation\n'
+        '[3] Hot Deck\n'
+        '[4] Regression\n'
+        'Choice:\t'
+    ))
+    if 1 < choice or choice < 4:
+        break
+clear()
+
+before = get_stats(data)
 print(
-    '- - - - - Before mean imputation - - - - -\n' +
+    '- - - - - - - - Before imputation - - - - - - - -\n' +
     'Missing values:\t' + '{:.2%}'.format(na_fraction(data)) + '\n' +
-    get_stats(data).to_string()
+    before.to_string()
 )
 
-impute_mean(data, inplace=True)
+if choice == 1:
+    impute_mean(data, inplace=True)
+elif choice == 2:
+    impute_interpolate(data, inplace=True)
+elif choice == 3:
+    impute_hotdeck(data, inplace=True)
+elif choice == 4:
+    impute_regression(data, inplace=True)
+else:
+    raise ValueError
 
+after = get_stats(data)
 print(
-    '- - - - - After mean imputation - - - - -\n' +
+    '- - - - - - - - After imputation - - - - - - - -\n' +
     'Missing values:\t' + '{:.2%}'.format(na_fraction(data)) + '\n' +
-    get_stats(data).to_string()
+    after.to_string()
 )
 
 print(
-    '- - - - - Diff - - - - -\n' +
-    (get_stats(data) - previous).to_string()
+    '- - - - - - - - Diff - - - - - - - -\n' +
+    (after - before).to_string()
 )
 
 # seaborn.regplot(
