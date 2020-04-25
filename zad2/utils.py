@@ -1,6 +1,5 @@
 from os import name, system
 
-import pandas
 from sklearn.linear_model import LinearRegression
 
 
@@ -38,7 +37,7 @@ def get_stats(df):
     return stats
 
 
-def impute(df, choice, column_name, inplace=False):
+def impute(df, choice, inplace=False):
     if choice == 1:
         return impute_mean(df, inplace=inplace)
     elif choice == 2:
@@ -46,7 +45,7 @@ def impute(df, choice, column_name, inplace=False):
     elif choice == 3:
         return impute_hotdeck(df, inplace=inplace)
     elif choice == 4:
-        return impute_regression(df, column_name=column_name)
+        return impute_regression(df)
     else:
         raise ValueError
 
@@ -63,14 +62,18 @@ def impute_hotdeck(df, inplace=False):
     return df.fillna(method='ffill', inplace=inplace)
 
 
-def impute_regression(df, column_name):
+def impute_regression(df):
     mean_filled = impute_mean(df)
-    regression_model = LinearRegression()
-    regression_model.fit(
-        mean_filled.index.values.reshape(-1, 1),
-        mean_filled.loc[:, column_name].values.reshape(-1, 1)
-    )
-    regression_values = regression_model.predict(mean_filled.index.values.reshape(-1, 1))
-    for i, j in enumerate((df[pandas.isnull(df[column_name])]).index):
-        mean_filled.loc[j, column_name] = regression_values[i]
+    for column in df.columns:
+        regression_values = get_linear_regression_values(
+            mean_filled.index.values.reshape(-1, 1),
+            mean_filled.loc[:, column].values.reshape(-1, 1),
+        )
+        mean_filled.loc[df[column].isnull(), column] = regression_values[df[column].isnull()]
     return mean_filled
+
+
+def get_linear_regression_values(x, y):
+    regression_model = LinearRegression()
+    regression_model.fit(x, y)
+    return regression_model.predict(x)

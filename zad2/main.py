@@ -1,12 +1,22 @@
 import numpy
 import pandas
 from matplotlib import pyplot
-from sklearn.linear_model import LinearRegression
 
-from utils import get_stats, na_fraction, read_choice, impute
+from utils import get_stats, na_fraction, read_choice, impute, get_linear_regression_values
 
 
-def plot_setup():
+def plot_results():
+    pyplot.plot(
+        get_linear_regression_values(
+            after.index.values.reshape(-1, 1),
+            after.loc[:, column_name].values.reshape(-1, 1),
+        ),
+        color='r'
+    )
+    pyplot.scatter(
+        x=after.index,
+        y=after.loc[:, column_name],
+    )
     pyplot.xlabel('index')
     pyplot.ylabel('value')
     pyplot.title(column_name)
@@ -18,7 +28,6 @@ def plot_setup():
         dpi=200,
         bbox_inches='tight'
     )
-    # pyplot.show()
 
 
 def print_results():
@@ -42,25 +51,7 @@ before.drop(['nasogastric_reflux_ph',
 column_name = 'total_protein'
 
 choice = read_choice()
-after = impute(before, choice, column_name)
-
-
-regression_model = LinearRegression()
-regression_model.fit(
-    after.index.values.reshape(-1, 1),
-    after.loc[:, column_name].values.reshape(-1, 1)
-)
-regression_values = regression_model.predict(after.index.values.reshape(-1, 1))
-
+after = impute(before, choice)
 
 print_results()
-
-pyplot.plot(
-    regression_values,
-    color='r'
-)
-pyplot.scatter(
-    x=after.index,
-    y=after.loc[:, column_name],
-)
-plot_setup()
+plot_results()
