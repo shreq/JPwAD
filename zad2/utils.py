@@ -14,6 +14,7 @@ def read_choice():
     while True:
         clear()
         choice = int(input(
+            '[0] No method\n'
             'Method of imputation:\n'
             '[1] Mean\n'
             '[2] Interpolation\n'
@@ -38,7 +39,9 @@ def get_stats(df):
 
 
 def impute(df, choice, inplace=False):
-    if choice == 1:
+    if choice == 0:
+        return no_impute(df)
+    elif choice == 1:
         return impute_mean(df, inplace=inplace)
     elif choice == 2:
         return impute_interpolation(df, inplace=inplace)
@@ -49,6 +52,8 @@ def impute(df, choice, inplace=False):
     else:
         raise ValueError
 
+def no_impute(df):
+    return df.dropna()
 
 def impute_mean(df, inplace=False):
     return df.fillna(df.mean(), inplace=inplace)
