@@ -81,4 +81,6 @@ def impute_regression(df):
 def get_linear_regression_values(x, y):
     regression_model = LinearRegression()
     regression_model.fit(x, y)
+    print('\nRegressor coeficient:\t' + str(regression_model.coef_))
+    print('Regressor intercept:\t' + str(regression_model.intercept_))
     return regression_model.predict(x)
