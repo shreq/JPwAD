@@ -11,7 +11,7 @@ class Bayes:
     test_target_values = None
     prediction = None
 
-    def __init__(self, data, labels, training_percent):
+    def __init__(self, data, labels, training_percent, name):
         self.model = nb.GaussianNB()
         self.unique_labels = unique(labels.values.ravel())
         partition_index = int(len(data.index) * training_percent / 100)
@@ -19,6 +19,7 @@ class Bayes:
         self.training_labels = labels.iloc[:partition_index].values.ravel()
         self.test_data = data.iloc[partition_index:].values
         self.test_labels = labels.iloc[partition_index:].values.ravel()
+        self.name = name
 
     def test(self):
         self.prediction = self.model.predict(self.test_data)
