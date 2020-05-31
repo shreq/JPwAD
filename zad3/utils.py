@@ -16,12 +16,12 @@ Dataset = namedtuple('Dataset', ['name', 'data', 'result'])
 
 def generateDatasets(data, labels):
     pca_data = pca(normalize(data))
+    chi_data = chi_square(data, labels)
     gvar_data = variance(data, False)
     svar_data = variance(data, True)
-    chi_data = chi_square(data, labels)
 
-    datasets = [data, pca_data, gvar_data, svar_data, chi_data]
-    names = ['Every column', 'PCA', 'Greatest variance', 'Smallest variance', 'Chi Square']
+    datasets = [data, pca_data, chi_data, gvar_data, svar_data, ]
+    names = ['Every column', 'PCA', 'Chi Square', 'Greatest variance', 'Smallest variance', ]
     results = [[] for i in range(len(datasets))]
 
     return [Dataset(name, dataset, result) for name, dataset, result in zip(names, datasets, results)]
